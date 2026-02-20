@@ -182,7 +182,7 @@ const HeroSection = () => {
         className="absolute bottom-10 right-6 lg:right-16 w-32 h-44 lg:w-44 lg:h-60 rounded-2xl overflow-hidden glass animate-float hidden md:block"
         style={{ animationDelay: "1s" }}>
 
-        <img src={grad1} alt="Eduarda" className="w-full h-full object-cover" />
+        
         
       </div>
     </section>);
