@@ -55,6 +55,10 @@ const FooterSection = () => {
           <Heart className="w-3 h-3" style={{ color: "hsl(var(--pink))" }} fill="hsl(var(--pink))" />
           para uma designer incrível
         </div>
+                <div className="flex items-center justify-center gap-2 mt-10 font-sans text-xs" style={{ color: "hsl(var(--muted-foreground) / 0.5)" }}>
+          Guilherme Cardoso
+          <Heart className="w-3 h-3" style={{ color: "hsl(var(--pink))" }} fill="hsl(var(--pink))" />
+        </div>
       </div>
     </footer>
   );

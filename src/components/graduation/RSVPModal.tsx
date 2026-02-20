@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { X, Check, Heart } from "lucide-react";
 import { CountdownTimer } from "./CountdownTimer";
+import emailjs from "@emailjs/browser";
 
 interface RSVPModalProps {
   isOpen: boolean;
@@ -13,7 +14,6 @@ const RSVPModal = ({ isOpen, onClose }: RSVPModalProps) => {
   const [step, setStep] = useState<FormStep>("form");
   const [formData, setFormData] = useState({
     name: "",
-    guests: "1",
     attending: "yes",
     message: "",
   });
@@ -22,220 +22,120 @@ const RSVPModal = ({ isOpen, onClose }: RSVPModalProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim()) return;
+
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setStep("success");
-    }, 1200);
+
+    // --- SEUS DADOS DO EMAILJS ---
+    const SERVICE_ID = "service_3xnonh8"; 
+    const PUBLIC_KEY = "WfHr9-iufUCAeovpH";
+    const TEMPLATE_ID = "template_h4hc67l";
+
+    const templateParams = {
+      from_name: formData.name,
+      attending: formData.attending === "yes" ? "Confirmada ✅" : "Não poderá ir ❌",
+      message: formData.message || "O convidado não deixou recado.",
+    };
+
+    emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY)
+      .then(() => {
+        setIsSubmitting(false);
+        setStep("success");
+      })
+      .catch((error) => {
+        console.error("Erro ao enviar e-mail:", error);
+        alert("Ocorreu um erro ao enviar. Verifique se o Template ID está correto.");
+        setIsSubmitting(false);
+      });
   };
 
   const handleClose = () => {
     onClose();
     setTimeout(() => {
       setStep("form");
-      setFormData({ name: "", guests: "1", attending: "yes", message: "" });
+      setFormData({ name: "", attending: "yes", message: "" });
     }, 300);
   };
 
   if (!isOpen) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      onClick={handleClose}
-    >
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0"
-        style={{ background: "hsl(0 0% 0% / 0.7)", backdropFilter: "blur(8px)" }}
-      />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={handleClose}>
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
 
-      {/* Modal */}
       <div
         className="relative glass rounded-3xl w-full max-w-md overflow-hidden"
-        style={{
-          boxShadow: "0 0 60px hsl(318 100% 70% / 0.2), var(--shadow-card)",
-          animation: "fade-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
-        }}
+        style={{ boxShadow: "0 0 60px hsl(318 100% 70% / 0.2)" }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Pink accent bar */}
-        <div className="h-1 w-full" style={{ background: "var(--gradient-pink)" }} />
+        <div className="h-1 w-full bg-gradient-to-r from-pink-400 to-purple-500" />
 
         <div className="p-8">
-          {/* Close */}
-          <button
-            onClick={handleClose}
-            className="absolute top-6 right-6 w-8 h-8 rounded-full glass-white flex items-center justify-center transition-all hover:scale-110"
-            style={{ color: "hsl(var(--muted-foreground))" }}
-          >
-            <X className="w-4 h-4" />
+          <button onClick={handleClose} className="absolute top-6 right-6 text-gray-400 hover:text-white transition-colors">
+            <X className="w-5 h-5" />
           </button>
 
           {step === "form" ? (
             <>
               <div className="mb-6">
-                <p className="font-sans text-xs uppercase tracking-widest mb-1" style={{ color: "hsl(var(--pink))" }}>
-                  RSVP
-                </p>
-                <h2 className="font-serif text-2xl font-bold" style={{ color: "hsl(var(--foreground))" }}>
-                  Confirmar Presença
-                </h2>
-                <p className="font-sans text-sm mt-1" style={{ color: "hsl(var(--muted-foreground))" }}>
-                  29 de Março · Teatro Sesi Fiergs
-                </p>
-
-                {/* Countdown */}
+                <p className="text-pink-400 text-xs uppercase tracking-widest mb-1">Confirmar Presença</p>
+                <h2 className="text-2xl font-bold text-white">Confirmar Presença</h2>
+                <p className="text-sm text-gray-400 mt-1">29 de Março · Teatro Sesi Fiergs</p>
                 <div className="mt-4">
-                  <p className="font-sans text-xs uppercase tracking-widest mb-3" style={{ color: "hsl(var(--muted-foreground))" }}>
-                    Faltam apenas
-                  </p>
                   <CountdownTimer />
                 </div>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="font-sans text-xs uppercase tracking-widest block mb-1.5" style={{ color: "hsl(var(--muted-foreground))" }}>
-                    Seu Nome *
-                  </label>
+                  <label className="text-xs uppercase text-gray-400 block mb-1.5">Seu Nome *</label>
                   <input
-                    type="text"
-                    required
+                    type="text" required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="Nome completo"
-                    className="w-full rounded-xl px-4 py-3 font-sans text-sm outline-none transition-all"
-                    style={{
-                      background: "hsl(var(--muted))",
-                      border: "1px solid hsl(var(--border))",
-                      color: "hsl(var(--foreground))",
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = "hsl(var(--pink))";
-                      e.target.style.boxShadow = "0 0 0 2px hsl(318 100% 70% / 0.15)";
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = "hsl(var(--border))";
-                      e.target.style.boxShadow = "none";
-                    }}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-pink-500 transition-colors"
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="font-sans text-xs uppercase tracking-widest block mb-1.5" style={{ color: "hsl(var(--muted-foreground))" }}>
-                      Confirmação
-                    </label>
-                    <select
-                      value={formData.attending}
-                      onChange={(e) => setFormData({ ...formData, attending: e.target.value })}
-                      className="w-full rounded-xl px-4 py-3 font-sans text-sm outline-none"
-                      style={{
-                        background: "hsl(var(--muted))",
-                        border: "1px solid hsl(var(--border))",
-                        color: "hsl(var(--foreground))",
-                      }}
-                    >
-                      <option value="yes">✓ Estarei lá!</option>
-                      <option value="no">Não poderei ir</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="font-sans text-xs uppercase tracking-widest block mb-1.5" style={{ color: "hsl(var(--muted-foreground))" }}>
-                      Convidados
-                    </label>
-                    <select
-                      value={formData.guests}
-                      onChange={(e) => setFormData({ ...formData, guests: e.target.value })}
-                      className="w-full rounded-xl px-4 py-3 font-sans text-sm outline-none"
-                      style={{
-                        background: "hsl(var(--muted))",
-                        border: "1px solid hsl(var(--border))",
-                        color: "hsl(var(--foreground))",
-                      }}
-                    >
-                      {["1", "2", "3", "4", "5+"].map((n) => (
-                        <option key={n} value={n}>{n} pessoa{n !== "1" ? "s" : ""}</option>
-                      ))}
-                    </select>
-                  </div>
+                <div>
+                  <label className="text-xs uppercase text-gray-400 block mb-1.5">Confirmação</label>
+                  <select
+                    value={formData.attending}
+                    onChange={(e) => setFormData({ ...formData, attending: e.target.value })}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-pink-500"
+                  >
+                    <option value="yes" className="bg-gray-900">✓ Estarei lá!</option>
+                    <option value="no" className="bg-gray-900">Não poderei ir</option>
+                  </select>
                 </div>
 
                 <div>
-                  <label className="font-sans text-xs uppercase tracking-widest block mb-1.5" style={{ color: "hsl(var(--muted-foreground))" }}>
-                    Mensagem (opcional)
-                  </label>
+                  <label className="text-xs uppercase text-gray-400 block mb-1.5">Mensagem (opcional)</label>
                   <textarea
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    placeholder="Deixe uma mensagem carinhosa..."
+                    placeholder="Deixe um recado carinhoso..."
                     rows={3}
-                    className="w-full rounded-xl px-4 py-3 font-sans text-sm outline-none resize-none transition-all"
-                    style={{
-                      background: "hsl(var(--muted))",
-                      border: "1px solid hsl(var(--border))",
-                      color: "hsl(var(--foreground))",
-                    }}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = "hsl(var(--pink))";
-                      e.target.style.boxShadow = "0 0 0 2px hsl(318 100% 70% / 0.15)";
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = "hsl(var(--border))";
-                      e.target.style.boxShadow = "none";
-                    }}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white outline-none focus:border-pink-500 resize-none"
                   />
                 </div>
 
                 <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full rounded-2xl px-6 py-4 font-sans font-medium text-sm transition-all duration-300 hover:scale-[1.02] disabled:opacity-70 disabled:scale-100 flex items-center justify-center gap-2"
-                  style={{
-                    background: "var(--gradient-pink)",
-                    color: "hsl(var(--primary-foreground))",
-                    boxShadow: "var(--shadow-pink)",
-                  }}
+                  type="submit" disabled={isSubmitting}
+                  className="w-full bg-pink-500 hover:bg-pink-600 text-white rounded-2xl py-4 font-bold transition-all transform hover:scale-[1.02] disabled:opacity-50 flex items-center justify-center gap-2"
                 >
-                  {isSubmitting ? (
-                    <>
-                      <div className="w-4 h-4 rounded-full border-2 border-t-transparent border-white animate-spin" />
-                      Enviando...
-                    </>
-                  ) : (
-                    <>
-                      <Heart className="w-4 h-4" />
-                      Confirmar Presença
-                    </>
-                  )}
+                  {isSubmitting ? "Enviando..." : <><Heart className="w-4 h-4 fill-current" /> Confirmar</>}
                 </button>
               </form>
             </>
           ) : (
             <div className="text-center py-4">
-              <div
-                className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5 animate-float"
-                style={{ background: "hsl(var(--pink) / 0.15)", border: "1px solid hsl(var(--pink) / 0.4)" }}
-              >
-                <Check className="w-8 h-8" style={{ color: "hsl(var(--pink))" }} />
+              <div className="w-16 h-16 rounded-full bg-pink-500/20 flex items-center justify-center mx-auto mb-5 border border-pink-500/40">
+                <Check className="w-8 h-8 text-pink-500" />
               </div>
-              <h2 className="font-serif text-2xl font-bold mb-2" style={{ color: "hsl(var(--foreground))" }}>
-                Presença Confirmada!
-              </h2>
-              <p className="font-sans text-sm mb-1" style={{ color: "hsl(var(--muted-foreground))" }}>
-                Obrigada, <span style={{ color: "hsl(var(--pink))" }}>{formData.name}</span>!
-              </p>
-              <p className="font-sans text-sm" style={{ color: "hsl(var(--muted-foreground))" }}>
-                Nos vemos no dia 29 de Março. 🎓✨
-              </p>
-              <button
-                onClick={handleClose}
-                className="mt-8 font-sans text-xs uppercase tracking-widest transition-colors hover:opacity-80"
-                style={{ color: "hsl(var(--pink))" }}
-              >
-                Fechar
-              </button>
+              <h2 className="text-2xl font-bold text-white mb-2">Presença Confirmada!</h2>
+              <p className="text-gray-400 text-sm">Obrigada por confirmar! O e-mail foi enviado para a anfitriã. ✨</p>
+              <button onClick={handleClose} className="mt-8 text-pink-400 text-xs uppercase tracking-widest hover:text-pink-300 transition-colors">Fechar</button>
             </div>
           )}
         </div>

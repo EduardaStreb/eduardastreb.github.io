@@ -4,22 +4,20 @@ import grad3 from "@/assets/grad-3.jpg";
 
 const events = [
   {
-    title: "Sessão de Fotos",
+    title: "Sessão de Fotos 📸",
     subtitle: "Registros Eternos",
-    time: "12h00",
+    time: "12h",
     description:
       "Momento especial para eternizar esta conquista ao lado das pessoas mais queridas.",
-    icon: "📸",
     photo: grad2,
     detail: "Chegada antecipada recomendada",
   },
   {
-    title: "Colação de Grau",
+    title: "Colação de Grau 🎓",
     subtitle: "A Grande Conquista",
-    time: "14h00",
+    time: "14h",
     description:
-      "A cerimônia oficial de conclusão do curso de Design Gráfico na UniRitter.",
-    icon: "🎓",
+      "A cerimônia oficial de conclusão do curso de Design Gráfico.",
     photo: grad3,
     detail: "Cerimônia oficial · Traje formal",
   },
@@ -57,8 +55,8 @@ const EventCards = () => {
           </p>
         </div>
 
-        {/* Cards */}
-        <div className="grid md:grid-cols-2 gap-6">
+        {/* Cards Grid */}
+        <div className="grid md:grid-cols-2 gap-6 items-stretch">
           {events.map((event, i) => (
             <EventCard key={event.title} event={event} index={i} />
           ))}
@@ -79,36 +77,39 @@ const EventCard = ({ event, index }: EventCardProps) => {
   return (
     <div
       ref={ref as React.RefObject<HTMLDivElement>}
-      className={`group relative rounded-3xl overflow-hidden cursor-pointer ${
+      className={`group relative rounded-3xl overflow-hidden cursor-pointer flex flex-col h-full ${
         index === 0 ? "reveal-left" : "reveal-right"
       } ${isVisible ? "revealed" : ""}`}
       style={{ transitionDelay: `${index * 150}ms` }}
     >
-      {/* Photo background */}
-      <div className="relative h-72 overflow-hidden">
+      {/* Photo background - Aumentado para h-80 e garantido w-full */}
+      <div className="relative h-80 w-full overflow-hidden">
         <img
           src={event.photo}
           alt={event.title}
-          className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
-          style={{ filter: "brightness(0.4) saturate(0.7)" }}
+          /* object-cover garante que a foto preencha o card sem faixas pretas */
+          className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+          style={{ filter: "brightness(0.6) saturate(0.8)" }}
         />
+        
         {/* Gradient overlay */}
         <div
           className="absolute inset-0 transition-opacity duration-500"
           style={{
             background:
-              "linear-gradient(to top, hsl(0 0% 4%) 0%, hsl(0 0% 4% / 0.3) 60%, transparent 100%)",
+              "linear-gradient(to top, hsl(0 0% 4%) 0%, hsl(0 0% 4% / 0.1) 60%, transparent 100%)",
           }}
         />
+        
         {/* Pink tint on hover */}
         <div
           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
           style={{ background: "hsl(318 100% 70% / 0.1)" }}
         />
 
-        {/* Time badge */}
-        <div className="absolute top-5 right-5">
-          <div className="glass rounded-full px-4 py-1.5 flex items-center gap-2">
+        {/* Time badge - Agora fixada corretamente à direita do card total */}
+        <div className="absolute top-5 left-5 z-10">
+          <div className="glass rounded-full px-4 py-1.5 flex items-center gap-2 border border-white/10">
             <span
               className="w-1.5 h-1.5 rounded-full animate-pulse"
               style={{ background: "hsl(var(--pink))" }}
@@ -120,12 +121,11 @@ const EventCard = ({ event, index }: EventCardProps) => {
         </div>
 
         {/* Icon */}
-        <div className="absolute top-5 left-5 text-2xl">{event.icon}</div>
       </div>
 
-      {/* Content */}
+      {/* Content Area - flex-1 faz esta div crescer para igualar os tamanhos */}
       <div
-        className="glass p-6 transition-all duration-500 group-hover:bg-opacity-20"
+        className="glass p-6 flex-1 flex flex-col transition-all duration-500 group-hover:bg-opacity-20"
         style={{ borderTop: "1px solid hsl(var(--glass-border))" }}
       >
         <p
@@ -140,11 +140,14 @@ const EventCard = ({ event, index }: EventCardProps) => {
         >
           {event.title}
         </h3>
-        <p className="font-sans text-sm leading-relaxed mb-4" style={{ color: "hsl(var(--muted-foreground))" }}>
+        
+        {/* flex-grow empurra o detalhe (detail) para o final do card */}
+        <p className="font-sans text-sm leading-relaxed mb-4 flex-grow" style={{ color: "hsl(var(--muted-foreground))" }}>
           {event.description}
         </p>
+
         <div
-          className="flex items-center gap-2 text-xs font-sans"
+          className="flex items-center gap-2 text-xs font-sans mt-auto"
           style={{ color: "hsl(var(--muted-foreground))" }}
         >
           <div

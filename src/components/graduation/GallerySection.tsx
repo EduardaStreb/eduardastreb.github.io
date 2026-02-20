@@ -3,12 +3,14 @@ import grad1 from "@/assets/grad-1.jpg";
 import grad2 from "@/assets/grad-2.jpg";
 import grad3 from "@/assets/grad-3.jpg";
 import grad4 from "@/assets/grad-4.jpg";
+import grad5 from "@/assets/grad-5.jpg";
 
 const photos = [
   { src: grad4, alt: "Eduarda com diploma", span: "row-span-2" },
   { src: grad1, alt: "Eduarda formanda", span: "" },
   { src: grad3, alt: "Eduarda com capelo", span: "" },
   { src: grad2, alt: "Eduarda sorrindo", span: "" },
+  { src: grad5, alt: "Eduarda linda", span: "" },
 ];
 
 const GallerySection = () => {

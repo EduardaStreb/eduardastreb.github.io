@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import grad1 from "@/assets/grad-1.jpg";
 import grad4 from "@/assets/grad-4.jpg";
 
 const HeroSection = () => {
@@ -21,7 +20,8 @@ const HeroSection = () => {
     const handleScroll = () => {
       if (heroRef.current) {
         const scrolled = window.scrollY;
-        setParallaxY(scrolled * 0.4);
+        // Reduzido o fator de parallax para evitar cortes na imagem ao subir
+        setParallaxY(scrolled * 0.2);
       }
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -32,37 +32,40 @@ const HeroSection = () => {
     <section
       ref={heroRef}
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
-      style={{ background: "var(--gradient-hero)" }}>
-
-      {/* Background photo with parallax */}
+      style={{ background: "var(--gradient-hero)" }}
+    >
+      {/* Background photo - Ajustada para melhor enquadramento */}
       <div
-        className="absolute inset-0 w-full h-[120%] -top-[10%]"
-        style={{ transform: `translateY(${parallaxY}px)` }}>
-
+        className="absolute inset-0 w-full h-full"
+        style={{ 
+          transform: `translateY(${parallaxY}px)`,
+          transition: "transform 0.1s ease-out"
+        }}
+      >
         <img
           src={grad4}
           alt="Eduarda Streb Gonçalves — Formatura"
-          className="w-full h-full object-cover object-top"
-          style={{ filter: "brightness(0.22) saturate(0.8)" }} />
+          className="w-full h-full object-cover object-[50%_20%]" // Center para focar no rosto
+          style={{ filter: "brightness(0.25) saturate(0.9)" }}
+        />
 
-        {/* Pink tint overlay */}
+        {/* Overlay para legibilidade */}
         <div
           className="absolute inset-0"
           style={{
             background:
-            "linear-gradient(to bottom, hsl(318 100% 70% / 0.08) 0%, transparent 40%, hsl(0 0% 4%) 100%)"
-          }} />
-
+              "linear-gradient(to bottom, transparent 20%, hsl(0 0% 4% / 0.4) 60%, hsl(0 0% 4%) 100%)"
+          }}
+        />
       </div>
 
-      {/* Animated particles */}
       <Particles />
 
       {/* Decorative pink line */}
       <div
         className="absolute left-1/2 top-0 -translate-x-1/2 w-px h-24 opacity-60"
-        style={{ background: "linear-gradient(to bottom, transparent, hsl(var(--pink)))" }} />
-
+        style={{ background: "linear-gradient(to bottom, transparent, hsl(var(--pink)))" }}
+      />
 
       {/* Content */}
       <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
@@ -74,12 +77,12 @@ const HeroSection = () => {
             opacity: subtitleVisible ? 1 : 0,
             transform: subtitleVisible ? "translateY(0)" : "translateY(10px)",
             transition: "all 0.6s cubic-bezier(0.16, 1, 0.3, 1)"
-          }}>
-
+          }}
+        >
           <span
             className="w-1.5 h-1.5 rounded-full animate-pulse"
-            style={{ background: "hsl(var(--pink))" }} />
-
+            style={{ background: "hsl(var(--pink))" }}
+          />
           Colação de Grau · Design Gráfico
         </div>
 
@@ -92,8 +95,8 @@ const HeroSection = () => {
               clipPath: nameVisible ? "inset(0 0% 0 0)" : "inset(0 100% 0 0)",
               transform: nameVisible ? "translateY(0)" : "translateY(20px)",
               transition: "opacity 1s cubic-bezier(0.16, 1, 0.3, 1), clip-path 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1)"
-            }}>
-
+            }}
+          >
             <span className="text-gradient-pink">Eduarda</span>
           </h1>
         </div>
@@ -106,8 +109,8 @@ const HeroSection = () => {
               clipPath: nameVisible ? "inset(0 0% 0 0)" : "inset(0 100% 0 0)",
               transform: nameVisible ? "translateY(0)" : "translateY(20px)",
               transition: "opacity 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s, clip-path 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.15s, transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s"
-            }}>
-
+            }}
+          >
             Streb Gonçalves
           </h1>
         </div>
@@ -118,18 +121,18 @@ const HeroSection = () => {
             opacity: subtitleVisible ? 1 : 0,
             transform: subtitleVisible ? "translateY(0)" : "translateY(20px)",
             transition: "all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s"
-          }}>
-
+          }}
+        >
           <p
             className="font-sans text-base md:text-lg mt-6 mb-2 tracking-widest uppercase"
-            style={{ color: "hsl(var(--muted-foreground))", letterSpacing: "0.25em" }}>
-
+            style={{ color: "hsl(var(--muted-foreground))", letterSpacing: "0.25em" }}
+          >
             convida para a sua
           </p>
           <p
             className="font-serif italic text-2xl md:text-3xl"
-            style={{ color: "hsl(var(--pink-glow))" }}>
-
+            style={{ color: "hsl(var(--pink-glow))" }}
+          >
             Cerimônia de Formatura
           </p>
         </div>
@@ -141,8 +144,8 @@ const HeroSection = () => {
             opacity: subtitleVisible ? 1 : 0,
             transform: subtitleVisible ? "translateY(0)" : "translateY(20px)",
             transition: "all 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s"
-          }}>
-
+          }}
+        >
           <div className="glass rounded-full px-8 py-3 flex items-center gap-3">
             <span className="font-serif text-2xl font-bold text-gradient-pink">29</span>
             <div className="text-left">
@@ -162,34 +165,24 @@ const HeroSection = () => {
           style={{
             opacity: subtitleVisible ? 0.6 : 0,
             transition: "opacity 0.8s 1.2s"
-          }}>
-
+          }}
+        >
           <span
             className="font-sans text-xs uppercase tracking-widest"
-            style={{ color: "hsl(var(--muted-foreground))" }}>
-
+            style={{ color: "hsl(var(--muted-foreground))" }}
+          >
             role para baixo
           </span>
           <div
             className="w-px h-12 animate-float"
-            style={{ background: "linear-gradient(to bottom, hsl(var(--pink)), transparent)" }} />
-
+            style={{ background: "linear-gradient(to bottom, hsl(var(--pink)), transparent)" }}
+          />
         </div>
       </div>
-
-      {/* Second photo — floating accent */}
-      <div
-        className="absolute bottom-10 right-6 lg:right-16 w-32 h-44 lg:w-44 lg:h-60 rounded-2xl overflow-hidden glass animate-float hidden md:block"
-        style={{ animationDelay: "1s" }}>
-
-        
-        
-      </div>
-    </section>);
-
+    </section>
+  );
 };
 
-// Floating particles
 const Particles = () => {
   const particles = Array.from({ length: 20 }, (_, i) => ({
     id: i,
@@ -201,23 +194,23 @@ const Particles = () => {
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {particles.map((p) =>
-      <div
-        key={p.id}
-        className="absolute rounded-full"
-        style={{
-          width: p.size,
-          height: p.size,
-          left: `${p.left}%`,
-          bottom: "-10px",
-          background: "hsl(318 100% 70% / 0.7)",
-          boxShadow: "0 0 6px hsl(318 100% 70% / 0.5)",
-          animation: `particle-drift ${p.duration}s linear ${p.delay}s infinite`
-        }} />
-
-      )}
-    </div>);
-
+      {particles.map((p) => (
+        <div
+          key={p.id}
+          className="absolute rounded-full"
+          style={{
+            width: p.size,
+            height: p.size,
+            left: `${p.left}%`,
+            bottom: "-10px",
+            background: "hsl(318 100% 70% / 0.7)",
+            boxShadow: "0 0 6px hsl(318 100% 70% / 0.5)",
+            animation: `particle-drift ${p.duration}s linear ${p.delay}s infinite`
+          }}
+        />
+      ))}
+    </div>
+  );
 };
 
 export default HeroSection;

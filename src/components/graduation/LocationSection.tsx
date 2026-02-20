@@ -107,9 +107,9 @@ const LocationSection = () => {
 
             {/* Details */}
             {[
-              { label: "Data", value: "29 de Março de 2026 · Sábado" },
-              { label: "Sessão de Fotos", value: "A partir das 12h00" },
-              { label: "Colação de Grau", value: "14h00 – Cerimônia oficial" },
+              { label: "Data", value: "29 de Março de 2026 · Domingo" },
+              { label: "Sessão de Fotos", value: "A partir das 12h" },
+              { label: "Colação de Grau", value: "14h – Cerimônia oficial" },
               { label: "Traje", value: "Social / Formatura" },
             ].map((item) => (
               <div

@@ -87,7 +87,7 @@ const Index = () => {
       >
         <Heart className="w-4 h-4" />
         <span className="hidden sm:block">Confirmar Presença</span>
-        <span className="sm:hidden">RSVP</span>
+        <span className="sm:hidden">Confirmar Presença</span>
       </button>
 
       {/* RSVP Modal */}
