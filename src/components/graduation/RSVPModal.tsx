@@ -133,8 +133,8 @@ const RSVPModal = ({ isOpen, onClose }: RSVPModalProps) => {
               <div className="w-16 h-16 rounded-full bg-pink-500/20 flex items-center justify-center mx-auto mb-5 border border-pink-500/40">
                 <Check className="w-8 h-8 text-pink-500" />
               </div>
-              <h2 className="text-2xl font-bold text-white mb-2">Presença Confirmada!</h2>
-              <p className="text-gray-400 text-sm">Obrigada por confirmar! O e-mail foi enviado para a anfitriã. ✨</p>
+              <h2 className="text-2xl font-bold text-white mb-2">Combinado!</h2>
+              <p className="text-gray-400 text-sm">Obrigada por informar! O e-mail foi enviado para a anfitriã. ✨</p>
               <button onClick={handleClose} className="mt-8 text-pink-400 text-xs uppercase tracking-widest hover:text-pink-300 transition-colors">Fechar</button>
             </div>
           )}
